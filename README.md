@@ -66,13 +66,9 @@ A modern evergreen browser supporting CSS custom properties and the Web Backdrop
 ### Local Installation
 1. Clone this repository to your machine:
 ```bash
-git clone https://github.com
+git clone https://github.com/ZakomakotheZBH/ZTK-3.0-and-ZewpolOS7_web_download/
 ```
-2. Step inside the application project directory:
-```bash
-cd zewpol-os7-web
-```
-3. Open the main file layout inside your preferred browser:
+2. Open the main file layout inside your preferred browser:
 ```bash
 # macOS
 open index.html
@@ -89,9 +85,10 @@ start index.html
 ## 📂 Project Structure
 
 ```text
-zewpol-os7-web/
-├── index.html        # Core UI Layout, Style Rules, and Engine Logic
-└── README.md         # Documentation Blueprint
+ZTK-3.0-and-ZewpolOS7_web_download/
+├── ztk_bootloader.c    
+└── README.md
+└── ZewpolOS_web_7.html
 ```
 
 ---
