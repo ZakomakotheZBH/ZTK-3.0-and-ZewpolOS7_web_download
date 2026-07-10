@@ -126,9 +126,9 @@ Because the application operates entirely client-side, you can host it for free 
 This asset architecture is open-source software and is licensed freely under the terms of the **MIT License**.
 
 
-===========================================================
+
 Looking for Legacy Builds or Testing Archives?
 Exclusive legacy releases (such as ZewpolOS 2.1) are available 
 only within our Discord community for historical testing.
-Join the server to download: [https://discord.gg/s8qDWjZFSs](ZTL discord)
-===========================================================
+Join the server to download: [https://discord.gg/s8qDWjZFSs]
+
