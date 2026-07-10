@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZewpolOS 7 · web</title>
+    <!-- Font Awesome for crisp icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #1b2b4a, #0c1424);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* ZewpolOS 7 "monitor" – glassmorphism + retro-futuristic vibe */
+        .os-container {
+            width: 1100px;
+            max-width: 100%;
+            height: 700px;
+            max-height: 95vh;
+            background: rgba(18, 30, 50, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* TITLE BAR — ZewpolOS 7 */
+        .title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px;
+            background: rgba(8, 16, 32, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        .title-bar .os-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #b8d4ff;
+            font-weight: 500;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .title-bar .os-logo i {
+            font-size: 1.6rem;
+            color: #5b9aff;
+            filter: drop-shadow(0 0 8px rgba(0, 120, 255, 0.3));
+        }
+
+        .title-bar .status-badge {
+            display: flex;
+            gap: 18px;
+            color: #7a9bcb;
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .title-bar .status-badge i {
+            margin-right: 6px;
+            color: #4caf8f;
+        }
+
+        /* MAIN PANEL — terminal + side panels */
+        .main-panel {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+            padding: 12px 16px 16px 16px;
+            gap: 14px;
+        }
+
+        /* TERMINAL WINDOW */
+        .terminal {
+            flex: 1;
+            background: rgba(0, 8, 18, 0.85);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .terminal-header .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .terminal-header .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2a3a5a;
+            transition: 0.2s;
+        }
+
+        .terminal-header .dot.red { background: #ff5f56; }
+        .terminal-header .dot.yellow { background: #ffbd2e; }
+        .terminal-header .dot.green { background: #27c93f; }
+
+        .terminal-header .terminal-title {
+            color: #6d8bb0;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+            opacity: 0.7;
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 12px 18px 8px 18px;
+            overflow-y: auto;
+            color: #c8dfff;
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.55;
+            scroll-behavior: smooth;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .terminal-body::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .terminal-body::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: #3a5a8a;
+            border-radius: 10px;
+        }
+
+        .terminal-output {
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin-bottom: 6px;
+        }
+
+        .terminal-output .highlight {
+            color: #7fc1ff;
+        }
+
+        .terminal-output .success {
+            color: #7ddfb0;
+        }
+
+        .terminal-output .error {
+            color: #ff7a7a;
+        }
+
+        .terminal-output .info {
+            color: #b0cfff;
+        }
+
+        .terminal-input-line {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .terminal-input-line .prompt {
+            color: #6db3ff;
+            font-weight: 500;
+        }
+
+        .terminal-input-line input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e0f0ff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            padding: 4px 0;
+            caret-color: #7fc1ff;
+        }
+
+        .terminal-input-line input::selection {
+            background: #2a4a7a;
+        }
+
+        /* RIGHT SIDEBAR — quick stats / widgets */
+        .sidebar {
+            width: 210px;
+            flex-shrink: 0;
+            background: rgba(0, 8, 18, 0.55);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 16px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #2a4a7a;
+            border-radius: 10px;
+        }
+
+        .widget {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            padding: 12px 12px 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .widget h4 {
+            color: #6d8bb0;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .widget .stat-row {
+            display: flex;
+            justify-content: space-between;
+            color: #b0ccf0;
+            font-size: 0.75rem;
+            padding: 2px 0;
+        }
+
+        .widget .stat-row .label {
+            color: #6d8bb0;
+        }
+
+        .widget .stat-row .value {
+            color: #b8daff;
+            font-weight: 500;
+        }
+
+        .game-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .game-chip {
+            background: rgba(60, 120, 220, 0.12);
+            border: 1px solid rgba(100, 170, 255, 0.15);
+            border-radius: 30px;
+            padding: 2px 12px;
+            font-size: 0.6rem;
+            color: #9bc0ff;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 400;
+        }
+
+        .game-chip:hover {
+            background: rgba(60, 120, 220, 0.25);
+            border-color: #4a8aff;
+            color: #cce4ff;
+        }
+
+        .power-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .power-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.65rem;
+            color: #8aacd6;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .power-btn:hover {
+            background: rgba(255, 70, 70, 0.15);
+            border-color: #ff6b6b;
+            color: #ffb0b0;
+        }
+
+        .power-btn.reboot:hover {
+            background: rgba(70, 150, 255, 0.15);
+            border-color: #5b9aff;
+            color: #b8d4ff;
+        }
+
+        .ai-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8aacd6;
+            font-size: 0.7rem;
+        }
+
+        .ai-indicator .dot-on {
+            width: 8px;
+            height: 8px;
+            background: #4caf8f;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 12px #4caf8f66;
+        }
+
+        .ai-indicator .dot-off {
+            width: 8px;
+            height: 8px;
+            background: #4a5a7a;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 780px) {
+            .sidebar {
+                display: none;
+            }
+            .os-container {
+                height: 95vh;
+                border-radius: 24px;
+            }
+            .title-bar .status-badge {
+                font-size: 0.6rem;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .title-bar .status-badge {
+                display: none;
+            }
+            .terminal-header .terminal-title {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* animations */
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="os-container" id="osContainer">
+    <!-- TITLE BAR -->
+    <div class="title-bar">
+        <div class="os-logo">
+            <i class="fas fa-microchip"></i>
+            <span>ZewpolOS 7 · web</span>
+        </div>
+        <div class="status-badge">
+            <span><i class="fas fa-circle" style="color:#4caf8f;"></i> online</span>
+            <span><i class="fas fa-gamepad"></i> 8 games</span>
+            <span><i class="fas fa-brain"></i> ZewAI <span id="aiStatusBadge">⏻</span></span>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-panel">
+        <!-- TERMINAL -->
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <span class="terminal-title"><i class="fas fa-terminal" style="margin-right:8px;"></i>ZewpolOS 7 · shell</span>
+            </div>
+            <div class="terminal-body" id="terminalBody">
+                <div class="terminal-output" id="terminalOutput">
+                    <span class="highlight">╔══════════════════════════════════════╗</span>
+                    <span class="highlight">║   ZewpolOS 7 · web  (browser)       ║</span>
+                    <span class="highlight">║   AI · Games · Disk Manager          ║</span>
+                    <span class="highlight">╚══════════════════════════════════════╝</span>
+                    <span class="info">› System ready. Type <span class="highlight">help</span> for commands.</span>
+                    <span class="info">› ZewAI: <span id="aiStatusText">offline</span> (set token with <span class="highlight">ai token &lt;key&gt;</span>)</span>
+                    <span class="info">› Games: <span class="highlight">games list</span>  |  Browser: <span class="highlight">browser &lt;url&gt;</span></span>
+                    <span></span>
+                </div>
+                <div class="terminal-input-line">
+                    <span class="prompt">⧩</span>
+                    <input type="text" id="cmdInput" placeholder="enter command…" autofocus spellcheck="false" autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="widget">
+                <h4><i class="fas fa-hdd" style="margin-right:6px;"></i> disks</h4>
+                <div class="stat-row"><span class="label">sda1</span><span class="value">128 GB</span></div>
+                <div class="stat-row"><span class="label">sdb2</span><span class="value">512 GB</span></div>
+                <div class="stat-row"><span class="label">nvme0</span><span class="value">1 TB</span></div>
+                <div style="margin-top:6px;font-size:0.6rem;color:#4a6a8a;"><i class="fas fa-circle" style="color:#4caf8f;"></i> 3 mounted</div>
+            </div>
+
+            <div class="widget">
+                <h4><i class="fas fa-gamepad" style="margin-right:6px;"></i> games</h4>
+                <div class="game-list">
+                    <span class="game-chip" data-game="snake">🐍 snake</span>
+                    <span class="game-chip" data-game="tetris">🧱 tetris</span>
+                    <span class="game-chip" data-game="pong">🏓 pong</span>
+                    <span class="game-chip" data-game="space_invaders">👾 invaders</span>
+                    <span class="game-chip" data-game="sudoku">🧩 sudoku</span>
+                    <span class="game-chip" data-game="2048">🔢 2048</span>
+                    <span class="game-chip" data-game="chess">♚ chess</span>
+                    <span class="game-chip" data-game="minesweeper">💣 mines</span>
+                </div>
+            </div>
+
+            <div class="widget">
+                <h4><i class="fas fa-power-off" style="margin-right:6px;"></i> power</h4>
+                <div class="power-actions">
+                    <span class="power-btn" data-action="shutdown"><i class="fas fa-power-off"></i> shutdown</span>
+                    <span class="power-btn reboot" data-action="reboot"><i class="fas fa-sync"></i> reboot</span>
+                    <span class="power-btn" data-action="sleep"><i class="fas fa-moon"></i> sleep</span>
+                </div>
+            </div>
+
+            <div class="widget" style="border-color:rgba(100,170,255,0.08);">
+                <h4><i class="fas fa-brain" style="margin-right:6px;"></i> ZewAI</h4>
+                <div class="ai-indicator">
+                    <span id="aiDot" class="dot-off"></span>
+                    <span id="aiLabel">offline</span>
+                    <span style="margin-left:auto;font-size:0.6rem;color:#4a6a8a;" id="aiModel">deepseek-chat</span>
+                </div>
+                <div style="margin-top:6px;display:flex;gap:6px;">
+                    <span class="power-btn" style="font-size:0.55rem;" id="aiChatBtn"><i class="fas fa-comment"></i> chat</span>
+                    <span class="power-btn" style="font-size:0.55rem;" id="aiClearBtn"><i class="fas fa-eraser"></i> clear</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        // --- DOM refs ---
+        const output = document.getElementById('terminalOutput');
+        const input = document.getElementById('cmdInput');
+        const terminalBody = document.getElementById('terminalBody');
+        const aiStatusText = document.getElementById('aiStatusText');
+        const aiStatusBadge = document.getElementById('aiStatusBadge');
+        const aiDot = document.getElementById('aiDot');
+        const aiLabel = document.getElementById('aiLabel');
+        const aiModel = document.getElementById('aiModel');
+
+        // --- state ---
+        let aiEnabled = false;
+        let aiToken = '';
+        let aiConversation = [];
+        let history = [];
+        let historyIndex = -1;
+
+        // --- helpers ---
+        function printLine(html, cls = '') {
+            const line = document.createElement('div');
+            line.className = 'terminal-output' + (cls ? ' ' + cls : '');
+            line.innerHTML = html;
+            output.appendChild(line);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+
+        function printPlain(text, cls = '') {
+            printLine(text.replace(/</g, '&lt;').replace(/>/g, '&gt;'), cls);
+        }
+
+        function clearTerminal() {
+            output.innerHTML = '';
+        }
+
+        function setAIStatus(on) {
+            aiEnabled = on;
+            aiStatusText.textContent = on ? 'online' : 'offline';
+            aiStatusBadge.textContent = on ? '●' : '○';
+            aiDot.className = on ? 'dot-on' : 'dot-off';
+            aiLabel.textContent = on ? 'online' : 'offline';
+        }
+
+        // --- commands ---
+        const commands = {};
+
+        commands.help = function() {
+            printLine(`
+            <span class="highlight">╔══════════════════════════════════════════╗</span>
+            <span class="highlight">║  ZewpolOS 7 · web  commands             ║</span>
+            <span class="highlight">╠══════════════════════════════════════════╣</span>
+            <span class="info">  help, about, clear, power                  </span>
+            <span class="info">  games [list | play &lt;name&gt;]             </span>
+            <span class="info">  browser &lt;url&gt; | bookmarks | search     </span>
+            <span class="info">  ai token &lt;key&gt; | chat | ask &lt;q&gt;   </span>
+            <span class="info">  ai clear | model &lt;name&gt; | temp &lt;n&gt;</span>
+            <span class="info">  disks list | mount | unmount | format     </span>
+            <span class="info">  ls, cd, mkdir, cat, echo, rm, pwd         </span>
+            <span class="highlight">╚══════════════════════════════════════════╝</span>
+            `);
+        };
+
+        commands.about = function() {
+            printLine(`
+            <span class="highlight">ZewpolOS 7 · web</span>  <span class="info">(browser edition)</span>
+            <span class="info">AI · Games · Disk Manager · Terminal Browser</span>
+            <span class="info">Built with ❤️ for the web.</span>
+            `);
+        };
+
+        commands.clear = function() {
+            clearTerminal();
+        };
+
+        commands.power = function(action) {
+            if (!action) {
+                printLine(`Usage: power shutdown | reboot | sleep`);
+                return;
+            }
+            printLine(`<span class="info">⚠️  ${action} sequence initiated...</span>`);
+            setTimeout(() => {
+                printLine(`<span class="success">✓ System ${action} complete (simulated).</span>`);
+            }, 400);
+        };
+
+        // --- games ---
+        const gameList = ['snake', 'tetris', 'pong', 'space_invaders', 'sudoku', '2048', 'chess', 'minesweeper'];
+        const gameDescriptions = {
+            snake: '🐍 Classic Snake – eat & grow',
+            tetris: '🧱 Tetris – stack blocks',
+            pong: '🏓 Pong – 2-player table tennis',
+            space_invaders: '👾 Space Invaders – defend Earth',
+            sudoku: '🧩 Sudoku – number puzzle',
+            '2048': '🔢 2048 – merge to 2048',
+            chess: '♚ Chess – classic strategy',
+            minesweeper: '💣 Minesweeper – avoid mines'
+        };
+
+        commands.games = function(sub, name) {
+            if (sub === 'list' || !sub) {
+                printLine(`<span class="highlight">╔══════════════════════════════════════╗</span>`);
+                printLine(`<span class="highlight">║  Available Games                    ║</span>`);
+                printLine(`<span class="highlight">╠══════════════════════════════════════╣</span>`);
+                gameList.forEach(g => {
+                    const desc = gameDescriptions[g] || g;
+                    printLine(`<span class="info">  ${desc}</span>`);
+                });
+                printLine(`<span class="highlight">╚══════════════════════════════════════╝</span>`);
+                return;
+            }
+            if (sub === 'play' && name) {
+                if (gameList.includes(name)) {
+                    printLine(`<span class="info">🎮 Starting ${name}... (web simulation)</span>`);
+                    printLine(`<span class="success">✓ ${gameDescriptions[name] || name} loaded.</span>`);
+                    printLine(`<span class="info">   Use arrow keys / WASD (simulated). Press Q to quit.</span>`);
+                    // fake game loop
+                    setTimeout(() => {
+                        printLine(`<span class="highlight">🏁 Game over. Score: ${Math.floor(Math.random()*100)+10}</span>`);
+                    }, 1200);
+                } else {
+                    printLine(`<span class="error">✗ Game "${name}" not found.</span>`);
+                }
+                return;
+            }
+            printLine(`Usage: games list | games play <name>`);
+        };
+
+        // --- browser ---
+        commands.browser = function(url, sub) {
+            if (sub === 'bookmarks') {
+                printLine(`<span class="info">📑 Bookmarks: (none yet)</span>`);
+                return;
+            }
+            if (sub === 'search' && url) {
+                printLine(`<span class="info">🔍 Searching for "${url}"...</span>`);
+                printLine(`<span class="success">✓ (simulated) results for "${url}"</span>`);
+                printLine(`<span class="info">   • example.com/result1</span>`);
+                printLine(`<span class="info">   • example.com/result2</span>`);
+                return;
+            }
+            if (url) {
+                printLine(`<span class="info">🌐 Loading ${url} ...</span>`);
+                setTimeout(() => {
+                    printLine(`<span class="success">✓ Page loaded (simulated)</span>`);
+                    printLine(`<span class="info">   ZewpolOS 7 · web browser</span>`);
+                    printLine(`<span class="info">   URL: ${url}</span>`);
+                    printLine(`<span class="info">   [content would render here]</span>`);
+                }, 300);
+                return;
+            }
+            printLine(`Usage: browser <url> | browser bookmarks | browser search <query>`);
+        };
+
+        // --- AI ---
+        commands.ai = function(sub, value) {
+            if (sub === 'token' && value) {
+                aiToken = value;
+                setAIStatus(true);
+                printLine(`<span class="success">✓ ZewAI token set. AI is now online.</span>`);
+                return;
+            }
+            if (!aiEnabled) {
+                printLine(`<span class="error">✗ ZewAI is offline. Set token: ai token <key></span>`);
+                return;
+            }
+            if (sub === 'chat') {
+                printLine(`<span class="info">💬 ZewAI chat started. Type your message (type 'quit' to exit).</span>`);
+                printLine(`<span class="info">   ZewAI: Hello! How can I help you?</span>`);
+                // we'll handle inline
+                return;
+            }
+            if (sub === 'ask' && value) {
+                printLine(`<span class="info">🧠 ZewAI thinking...</span>`);
+                setTimeout(() => {
+                    printLine(`<span class="success">ZewAI: I'm a simulated AI. Your question: "${value}"</span>`);
+                    printLine(`<span class="info">   (DeepSeek integration would respond here.)</span>`);
+                }, 400);
+                return;
+            }
+            if (sub === 'clear') {
+                aiConversation = [];
+                printLine(`<span class="info">🧹 Conversation cleared.</span>`);
+                return;
+            }
+            if (sub === 'model' && value) {
+                aiModel.textContent = value;
+                printLine(`<span class="success">✓ Model set to: ${value}</span>`);
+                return;
+            }
+            if (sub === 'temp' && value) {
+                const t = parseFloat(value);
+                if (!isNaN(t) && t >= 0 && t <= 2) {
+                    printLine(`<span class="success">✓ Temperature set to: ${t}</span>`);
+                } else {
+                    printLine(`<span class="error">✗ Temperature must be 0.0 – 2.0</span>`);
+                }
+                return;
+            }
+            printLine(`Usage: ai token <key> | chat | ask <question> | clear | model <name> | temp <n>`);
+        };
+
+        // --- disks ---
+        commands.disks = function(sub, arg1, arg2) {
+            if (sub === 'list' || !sub) {
+                printLine(`<span class="highlight">╔══════════════════════════════════════╗</span>`);
+                printLine(`<span class="highlight">║  Disk Management                    ║</span>`);
+                printLine(`<span class="highlight">╠══════════════════════════════════════╣</span>`);
+                printLine(`<span class="info">  sda1  128 GB  45 GB used  mounted</span>`);
+                printLine(`<span class="info">  sdb2  512 GB  120 GB used mounted</span>`);
+                printLine(`<span class="info">  nvme0 1 TB   320 GB used mounted</span>`);
+                printLine(`<span class="highlight">╚══════════════════════════════════════╝</span>`);
+                return;
+            }
+            if (sub === 'mount' && arg1 && arg2) {
+                printLine(`<span class="info">🔗 Mounting ${arg1} → ${arg2} ...</span>`);
+                setTimeout(() => printLine(`<span class="success">✓ Mounted.</span>`), 300);
+                return;
+            }
+            if (sub === 'unmount' && arg1) {
+                printLine(`<span class="info">🔌 Unmounting ${arg1} ...</span>`);
+                setTimeout(() => printLine(`<span class="success">✓ Unmounted.</span>`), 300);
+                return;
+            }
+            if (sub === 'format' && arg1 && arg2) {
+                printLine(`<span class="error">⚠️ Formatting ${arg1} as ${arg2} ... (simulated)</span>`);
+                setTimeout(() => printLine(`<span class="success">✓ Format complete.</span>`), 500);
+                return;
+            }
+            printLine(`Usage: disks list | mount <dev> <point> | unmount <point> | format <dev> <fs>`);
+        };
+
+        // --- filesystem stubs ---
+        commands.ls = function() {
+            printLine(`<span class="info">  📁 bin/   📁 etc/   📁 home/   📁 usr/</span>`);
+            printLine(`<span class="info">  📁 games/ 📁 browser/ 📁 ai/   📁 tmp/</span>`);
+            printLine(`<span class="info">  📄 README.md  📄 config.ini</span>`);
+        };
+
+        commands.cd = function(path) {
+            printLine(`<span class="info">📂 cd ${path || '/'} (simulated)</span>`);
+        };
+
+        commands.mkdir = function(name) {
+            printLine(`<span class="success">✓ Created directory: ${name}</span>`);
+        };
+
+        commands.cat = function(name) {
+            printLine(`<span class="info">📄 Contents of ${name}:</span>`);
+            printLine(`<span class="info">   [simulated file content]</span>`);
+        };
+
+        commands.echo = function(...args) {
+            printLine(args.join(' '));
+        };
+
+        commands.rm = function(name) {
+            printLine(`<span class="error">⚠️ Removed: ${name}</span>`);
+        };
+
+        commands.pwd = function() {
+            printLine(`<span class="info">/home/user</span>`);
+        };
+
+        // --- command dispatcher ---
+        function handleCommand(cmdLine) {
+            const parts = cmdLine.trim().split(/\s+/);
+            if (!parts.length) return;
+            const cmd = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            if (cmd === 'help') { commands.help(); return; }
+            if (cmd === 'about') { commands.about(); return; }
+            if (cmd === 'clear') { commands.clear(); return; }
+            if (cmd === 'power') { commands.power(args[0]); return; }
+
+            if (cmd === 'games') { commands.games(args[0], args[1]); return; }
+            if (cmd === 'browser') { commands.browser(args[0], args[1]); return; }
+            if (cmd === 'ai') { commands.ai(args[0], args[1]); return; }
+            if (cmd === 'disks') { commands.disks(args[0], args[1], args[2]); return; }
+
+            if (cmd === 'ls') { commands.ls(); return; }
+            if (cmd === 'cd') { commands.cd(args[0]); return; }
+            if (cmd === 'mkdir') { commands.mkdir(args[0]); return; }
+            if (cmd === 'cat') { commands.cat(args[0]); return; }
+            if (cmd === 'echo') { commands.echo(...args); return; }
+            if (cmd === 'rm') { commands.rm(args[0]); return; }
+            if (cmd === 'pwd') { commands.pwd(); return; }
+
+            printLine(`<span class="error">✗ Command not found: ${cmd}</span>`);
+        }
+
+        // --- input handling ---
+        function processInput() {
+            const raw = input.value;
+            if (!raw.trim()) return;
+            input.value = '';
+
+            // add to history
+            history.push(raw);
+            historyIndex = history.length;
+
+            // echo
+            printLine(`<span class="prompt">⧩</span> ${raw.replace(/</g,'&lt;')}`);
+
+            // handle AI chat inline
+            if (aiEnabled && raw.startsWith('chat ')) {
+                const msg = raw.substring(5);
+                printLine(`<span class="info">🧠 ZewAI: (simulated) I received: "${msg}"</span>`);
+                return;
+            }
+
+            // handle quit from chat
+            if (raw.trim().toLowerCase() === 'quit' && aiEnabled) {
+                printLine(`<span class="info">👋 Exiting chat mode.</span>`);
+                return;
+            }
+
+            handleCommand(raw);
+        }
+
+        // --- event listeners ---
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                processInput();
+                // scroll to bottom
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    input.value = history[historyIndex] || '';
+                }
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    input.value = history[historyIndex] || '';
+                } else {
+                    historyIndex = history.length;
+                    input.value = '';
+                }
+            }
+        });
+
+        // click to focus
+        document.addEventListener('click', () => input.focus());
+
+        // --- sidebar: game chips ---
+        document.querySelectorAll('.game-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                const game = this.dataset.game;
+                if (game) {
+                    input.value = `games play ${game}`;
+                    input.focus();
+                    processInput();
+                }
+            });
+        });
+
+        // --- sidebar: power buttons ---
+        document.querySelectorAll('.power-btn[data-action]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.dataset.action;
+                if (action) {
+                    input.value = `power ${action}`;
+                    input.focus();
+                    processInput();
+                }
+            });
+        });
+
+        // --- ai chat button ---
+        document.getElementById('aiChatBtn').addEventListener('click', function() {
+            if (!aiEnabled) {
+                printLine(`<span class="error">✗ ZewAI offline. Set token: ai token <key></span>`);
+                return;
+            }
+            input.value = `ai chat`;
+            input.focus();
+            processInput();
+        });
+
+        document.getElementById('aiClearBtn').addEventListener('click', function() {
+            input.value = `ai clear`;
+            input.focus();
+            processInput();
+        });
+
+        // --- focus on load ---
+        input.focus();
+
+        // --- boot message ---
+        setTimeout(() => {
+            printLine(`<span class="info">› ZewpolOS 7 · web ready. <span class="highlight">help</span> for commands.</span>`);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }, 300);
+
+        // --- expose for debugging ---
+        window.__os = { commands, printLine, setAIStatus, aiEnabled };
+
+        // --- simulate ai token from url param ?token=xxx ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenParam = urlParams.get('token');
+        if (tokenParam) {
+            setTimeout(() => {
+                input.value = `ai token ${tokenParam}`;
+                processInput();
+            }, 500);
+        }
+
+    })();
+</script>
+
+</body>
+</html>
