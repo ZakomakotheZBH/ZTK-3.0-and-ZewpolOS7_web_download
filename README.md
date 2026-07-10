@@ -93,6 +93,8 @@ ZTK-3.0-and-ZewpolOS7_web_download/
 ├── ztk_bootloader.c    
 └── README.md
 └── ZewpolOS_web_7.html
+└── System_requirements.md
+
 ```
 
 ---
