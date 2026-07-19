@@ -1,5 +1,5 @@
 /**
- * ZTK Business Edition v4.0 - Enterprise Ultimate Edition
+ * ZTK Business Edition v4.0 and v3.0- Enterprise Ultimate Edition
  * ISO C11 Compliant - Full System with AI, Games, Disk Management, and More
  *
  * Features:
@@ -73,7 +73,7 @@
 #endif
 
 /* Version Information */
-#define ZTK_VERSION "4.0.0"
+#define ZTK_VERSION "3.0.0"
 #define ZTK_RELEASE "Enterprise Ultimate Edition"
 #define ZTK_CODENAME "Phoenix"
 #define ZTK_BUILD_DATE __DATE__
