@@ -125,7 +125,16 @@ Because the application operates entirely client-side, you can host it for free 
 
 This asset architecture is open-source software and is licensed freely under the terms of the **MIT License**.
 
+## Other OS in the bundle
 
+You can find other OS in the bundle now or in the future and their descriptions in the code comments. Some examples we might make are 
+
+1. ZewpolOS nano 2.0
+2. ZewpolOS playfield
+3. ZewpolOS dashboard
+4. ZewpolOS ecosystem
+5. SHINEOS (coming soon!)
+6. and more!
 
 Looking for Legacy Builds or Testing Archives?
 Exclusive legacy releases (such as ZewpolOS 2.1) are available 
