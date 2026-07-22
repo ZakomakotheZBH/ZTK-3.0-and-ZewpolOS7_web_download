@@ -75,13 +75,13 @@ git clone https://github.com/ZakomakotheZBH/ZTK-3.0-and-ZewpolOS7_web_download/
 2. Open the main file layout inside your preferred browser:
 ```bash
 # macOS
-open index.html
+open ZewpolOS_web_7.html
 
 # Linux
-xdg-open index.html
+xdg-open ZewpolOS_web_7.html
 
 # Windows
-start index.html
+start ZewpolOS_web_7.html
 ```
 
 ---
@@ -93,6 +93,7 @@ ZTK-3.0-and-ZewpolOS7_web_download/
 ├── ztk_bootloader.c    
 └── README.md
 └── ZewpolOS_web_7.html
+└──ZOS_for_TVs.html
 └── System_requirements.md
 
 ```
